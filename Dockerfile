@@ -9,14 +9,17 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN mkdir -p /app/model && \
+RUN mkdir -p /app/model/facebook/bart-large-mnli && \
     python -c "from transformers import AutoModelForSequenceClassification, AutoTokenizer; \
-               AutoModelForSequenceClassification.from_pretrained('facebook/bart-large-mnli', cache_dir='/app/model'); \
-               AutoTokenizer.from_pretrained('facebook/bart-large-mnli', cache_dir='/app/model')"
+                AutoModelForSequenceClassification.from_pretrained('facebook/bart-large-mnli').save_pretrained('/app/model/facebook/bart-large-mnli'); \
+                AutoTokenizer.from_pretrained('facebook/bart-large-mnli').save_pretrained('/app/model/facebook/bart-large-mnli')"
+
 
 RUN python -c "from transformers import pipeline; \
-               classifier = pipeline('zero-shot-classification', model='/app/model/facebook/bart-large-mnli', \
-               tokenizer='/app/model/facebook/bart-large-mnli')"
+                classifier = pipeline('zero-shot-classification', \
+                model='/app/model/facebook/bart-large-mnli', \
+                tokenizer='/app/model/facebook/bart-large-mnli')"
+
 
 COPY main.py .
 
