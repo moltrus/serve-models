@@ -7,8 +7,7 @@ import os
 
 app = FastAPI()
 
-MODEL_PATH = "/app/model/facebook/bart-large-mnli"
-classifier = pipeline("zero-shot-classification", model=MODEL_PATH)
+classifier = pipeline("zero-shot-classification", model="/app/model/facebook/bart-large-mnli", tokenizer="/app/model/facebook/bart-large-mnli")
 
 class BART_Large_MNLI(BaseModel):
     text: str
